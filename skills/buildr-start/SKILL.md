@@ -1,46 +1,75 @@
 ---
 name: buildr-start
-description: "Turn a rough idea or an existing repository into a scoped project brief and the first usable outcome. Use when starting a project or adopting buildr-stack, not for ordinary feature edits."
+description: "Interview the owner about their project, then create its structure and populate the Markdown records. Invoke manually after installing buildr-stack or when adopting it in an existing project."
 license: MIT
 ---
 
 # Start a project
 
-Use the idea in chat, existing project notes, and code as evidence. Identify
-whether this is a new project, an existing codebase, or an extension of a project
-already using these documents. Preserve existing instructions and decisions.
+Read the project's agent instructions, apply buildr-unslop, and inspect Git status.
+Preserve unrelated work.
 
-The installer supplies a name, not a product brief. Before planning or writing
-application code, establish who the project is for, the problem it solves, and
-the first useful result. Use facts already supplied in chat, documents, or code.
-If the owner has supplied only a name, ask: "What are you building, who is it for,
-and what should someone be able to do in the first version?" Wait for the answer
-before choosing product scope, a framework, or features. Repository inspection
-can continue while waiting. Do not infer a product from its name.
+## Ask about the project first
 
-1. Inspect repository status and the existing entry points. Read only documents
-   relevant to the product's first user and current path. Do not scan secrets.
-2. State the first user, their problem, one useful result, and explicit exclusions.
-   Separate facts, preferences, assumptions, and unresolved decisions.
-3. Resolve observable facts yourself. Ask only questions that change scope or a
-   decision the owner must make. Group at most a few related questions at a time.
-   Ask about platform, cost, access, or design constraints when they affect the
-   selected result. Do not repeat answered questions or require a fixed intake form.
-   Continue independent work while waiting. Keep missing facts open; silence is
-   neither a product decision nor spending authorization.
-4. Update PROJECT.md and the first outcome in IMPLEMENTATION_PHASES.md. Keep the
-   project's existing filenames when they already cover these roles. Link them
-   from AGENTS.md. Keep PROJECT.md's living logs and Doc version current using
-   buildr-sync's update rules. Put daily steps and the next action in the roadmap.
-5. Keep selected tools, access requirements, and costs in PROJECT.md only when
-   they affect the work. Put visual decisions in DESIGN.md. For nonvisual work,
-   mark design not applicable. Do not choose a service just to fill a template.
+Ask at most three related questions at a time and wait for the answers.
+Do not scaffold or populate documents while the intended product is unknown.
 
-If installed with skills only, use the owner's existing documents first. Request
-or create missing records within the authorized adoption scope, not an entire
-parallel documentation system. A small utility may need only a concise brief.
-When setting up the project's agent rules, require buildr-unslop for every
-response and piece of prose. Preserve the owner's other instructions.
+Start with:
 
-Finish with the selected first result, real prerequisites, unresolved decisions,
-and the next action. Do not claim that scaffolding means the product works.
+- What are you building, who will use it, and what problem should it solve?
+- What should the first usable version do? What is outside its scope?
+- Is this new or existing work? What should be kept or changed?
+
+Reuse answers already given. If the owner supplied a clear brief, state your
+understanding and ask only about missing decisions. Code shows existing behavior;
+it cannot establish the owner's intent. Use only context available to this session.
+
+Then ask the relevant follow-up questions:
+
+- What kind of project and platform is it: website, app, API, CLI, library, or something else?
+- Is there a required stack, or should you choose the simplest suitable option?
+- For visual work, are there references, brand rules, or a Paper/design file?
+- What time, cost, privacy, deployment, or access constraints affect setup?
+- Does the owner want direct building or guided pair mode?
+
+Resolve observable technical facts yourself. Wait for decisions that affect the
+structure or first outcome; other unknowns can stay open. Once enough is known,
+continue setup without another approval round.
+
+## Create the structure
+
+For existing work, inspect relevant code, entry points, documents, and Git history.
+Reuse the layout and established decisions rather than reorganizing working code.
+
+For new work, create the directories, entry files, and configuration needed by the
+first outcome. Use current official documentation, preferably Context7, for the
+selected framework. Avoid empty placeholder trees, speculative packages, and a
+default monorepo or stack. Add dependencies only for the selected setup.
+
+Setup covers local scaffolding and documents. Respect a narrower discussion-only
+or documents-only request. Leave product features for the next task, and follow
+the project's authorization rules for external actions.
+
+## Populate the Markdown files
+
+Write the files from the answers and observed work. Reuse equivalent existing
+records and filenames; create a missing record only when its role is needed.
+
+| File | Contents |
+|---|---|
+| AGENTS.md | Confirmed working rules, structure, commands, document links, build/pair mode, and skill routing. Preserve established rules and require buildr-unslop for writing. |
+| PROJECT.md | Users, problem, scope, exclusions, architecture, constraints, decisions, and progress. |
+| IMPLEMENTATION_PHASES.md | Current baseline, next usable outcome, dependencies, steps, completion check, and next action. |
+| DESIGN.md | Accepted visual direction, references, tokens, and components, or not applicable. Distinguish observed styling from confirmed decisions. |
+
+Replace placeholders where facts are known. Keep unknowns explicit and distinguish
+existing behavior from verified behavior. Do not invent metrics, past decisions,
+or check results. Use buildr-sync's rules for living logs, dates, and document versions.
+
+## Check and finish
+
+Check that the files, entry points, links, and descriptions agree. Use one focused
+check for a runnable scaffold when available; report unavailable checks accurately.
+
+Report the structure created or reused, files written, unresolved questions,
+checks, and next action. A chat summary alone does not complete setup.

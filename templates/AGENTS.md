@@ -6,10 +6,11 @@
   response, document, UI string, and skill you write or edit. If it is missing from
   the catalog, read `.agents/skills/buildr-unslop/SKILL.md` directly.
 - Follow the current request. Build the smallest usable change and preserve unrelated work.
-- When starting or adopting a project, use `buildr-start` to establish the intended
-  user, problem, and first useful result. A name alone is not a brief. Reuse known
-  facts; ask for missing intent and wait before product planning or application code.
-- Inspect git status before editing when this is a Git repository. Read relevant code first.
+- When the owner invokes `buildr-start`, ask about the intended user, problem,
+  first useful result, and relevant setup preferences. Wait for missing answers
+  before choosing the structure. Then create the needed project scaffold and
+  populate the project records. Reuse confirmed answers and preserve existing work.
+- Inspect git status before editing when this is a Git repository.
 - Follow YAGNI. Read relevant code and reuse existing patterns and dependencies.
   Prefer code a mid-level engineer can understand and change.
 - Keep types strict where supported. Comment constraints and non-obvious decisions.
@@ -95,4 +96,4 @@ the next number and increase the integer minor by one, so v0.1 becomes v0.2 and
 v0.9 becomes v0.10. For an existing project, preserve its established convention
 unless the owner requests a change. Commit numbering is separate from PROJECT.md
 document versions and any application release version.
-Review the staged diff and commit only the intended files. Push only when authorized.
+Review the staged diff and commit only the intended files.

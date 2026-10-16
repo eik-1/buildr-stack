@@ -7,8 +7,7 @@ license: MIT
 # Review the changed path
 
 Read the actual diff, relevant callers, selected outcome, and current constraints.
-Identify the review boundary before looking for defects. A small change does not
-need a pretend panel of reviewers or mandatory subagents.
+Identify the review boundary before looking for defects.
 
 For a proposed finding, establish:
 

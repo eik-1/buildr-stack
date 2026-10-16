@@ -26,8 +26,6 @@ instructions; `templates/` holds the four starter documents.
 ## Commit messages
 
 When a commit is authorized, use `vMAJOR.MINOR: concise description` as its subject.
-Start with `v0.1: initial buildr-stack starter`. Read the latest version-prefixed
-commit before choosing the next number and increase the integer minor by one,
+Read the latest version-prefixed commit and increase its integer minor by one,
 so v0.1 becomes v0.2 and v0.9 becomes v0.10. Keep this sequence separate from
-PROJECT.md document versions and the installer's package version.
-Review the staged diff and commit only the intended files. Push only when authorized.
+document and package versions. Review the staged diff and commit only intended files.

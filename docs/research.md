@@ -1,177 +1,82 @@
 # Research behind buildr-stack
 
-Checked on 2026-10-13. This is a decision record for the initial implementation,
-not a ranking of every AI development tool. Repository descriptions, dependency
-requirements, and discovery behavior can change after this date.
+Initial research: 2026-10-13. Shared instruction and skill discovery updated:
+2026-10-16. Tool behavior and repository details below reflect those checks.
 
-Updated on 2026-10-16 for shared installation. Claude Code's
-[instruction guide](https://code.claude.com/docs/en/memory#agentsmd) confirms
-direct AGENTS.md support from v2.1.277. Its
-[skill guide](https://code.claude.com/docs/en/skills#choose-where-skills-load)
-does not document native discovery from `.agents/skills/`. The starter uses that
-single shared directory, with explicit file routing in AGENTS.md. Agents without
-native discovery read the skill files directly through plain-language requests.
-The installer no longer needs an agent-selection flag or duplicate skill trees.
+The starting point was the owner's Refrakt workflow: separate product, design,
+roadmap, and agent instructions, with roughly two-hour outcomes and an option to
+learn through guided implementation.
 
-## Question
+## Compared workflows
 
-What reusable system can turn the author's Refrakt workflow into a general-purpose
-starter that other people can inspect, adopt, and adapt across AI coding tools?
+The research reviewed primary repositories and representative workflow files.
+Several unrelated projects use the name pstack, so they are listed separately.
 
-The owner's constraints are practical: usable outcomes, maintainable code, deliberate
-design, current documentation, and learning by reading and attempting the code.
-They also want a public repository that demonstrates these decisions. GitHub stars
-are a hoped-for result, not a metric this research can predict.
-
-## Method and provenance
-
-- Read the actual Refrakt instruction, product, roadmap, design, and sync documents.
-- Reviewed six relevant earlier threads about design records, frontend skill
-  overlap, simplifying AI-generated complexity, daily planning, and guided building.
-- Read current primary repository descriptions and README files for the comparison
-  below. Inspected representative skill files or methodology documents for gstack,
-  backnotprop/pstack, phthomas/pstack, and Spec Kit.
-- Used Context7 to resolve and query Codex, Claude Code, Context7, and GitHub Actions
-  documentation. Opened official agent, Paper, and Agent Skills documentation.
-- Read two research abstracts with different results on repository context files.
-  Their findings inform a cautious design; they do not validate this toolkit.
-
-Private thread transcripts, account details, private design links, customer media,
-and project credentials are excluded from this repository. The generalized findings
-below describe the workflow rather than republishing those materials.
-
-## Comparable systems
-
-Several unrelated repositories use the name pstack. Comparing one as if it
-represented the others would produce a misleading result.
-
-| System | What the inspected sources establish | Lesson for buildr-stack |
+| System | Relevant approach | Decision for buildr-stack |
 |---|---|---|
-| [gstack](https://github.com/garrytan/gstack) | Specialist roles for product, engineering, design, review, and QA, with executable tooling and setup requirements including Bun | Make task roles discoverable; keep this starter's runtime small and use the host's browser |
-| [backnotprop/pstack](https://github.com/backnotprop/pstack) | A standalone collection of engineering skills and principles; some skills have dependencies on other skills or external tooling | Give each bundled skill a narrow role and avoid hidden required providers |
-| [phthomas/pstack](https://github.com/phthomas/pstack) | A Markdown workflow for converting a brain dump into product records and phased specs, with capability-aware execution | Start from rough input and keep ownership explicit; do not spec every future phase by default |
-| [no-session/pstack](https://github.com/no-session/pstack) | A gstack fork oriented toward solo founders and product validation | Preserve useful product questions without imposing a particular business model |
-| [Superpowers](https://github.com/obra/superpowers) | A composable methodology with brainstorming, planning, test-first development, and subagent execution | Borrow task discipline; retain the project's own risk-based verification and permission scope |
-| [Spec Kit](https://github.com/github/spec-kit) | A CLI and customizable workflows for spec-driven development and related processes | Keep intent and implementation connected; use fewer records for small projects |
-| [GSD Core](https://github.com/open-gsd/gsd-core) | A discuss, plan, execute, verify, and ship loop with an installer and fresh-context delegation | Make resumability useful without requiring delegation or a fixed agent fleet |
+| [gstack](https://github.com/garrytan/gstack) | Specialist product, engineering, design, and QA roles with executable tools | Keep roles discoverable while using the host's tools |
+| [backnotprop/pstack](https://github.com/backnotprop/pstack) | Engineering skills and principles, with some external dependencies | Give each skill a narrow role and disclose prerequisites |
+| [phthomas/pstack](https://github.com/phthomas/pstack) | Brain dump, product records, and phased specifications | Start with questions and plan the first useful outcome |
+| [no-session/pstack](https://github.com/no-session/pstack) | A gstack fork focused on founders and product validation | Keep product questions without imposing a business model |
+| [Superpowers](https://github.com/obra/superpowers) | Composable planning, testing, and delegated execution | Reuse task discipline while preserving the owner's verification preferences |
+| [Spec Kit](https://github.com/github/spec-kit) | CLI workflows for specification-driven development | Keep intent and implementation connected with fewer records |
+| [GSD Core](https://github.com/open-gsd/gsd-core) | Discuss, plan, execute, verify, and ship | Support resuming work without requiring delegation |
 
-The former [GSD repository](https://github.com/gsd-build/get-shit-done) now directs
-users to GSD Core. This was checked during research rather than assuming the old
-home remained current.
+## Design decisions
 
-These systems have useful capabilities that buildr-stack does not implement. buildr-stack
-is a smaller option for durable project records, design reconciliation, and guided
-learning. It is not a browser engine, deployment tool, autonomous scheduler, or
-multi-agent orchestration framework.
+| Decision | Reason |
+|---|---|
+| Separate product, design, roadmap, and agent records | Each changes independently; clear ownership reduces repeated or conflicting decisions |
+| Keep the current project baseline editable | Refrakt showed that an outdated summary can conflict with newer decisions and progress |
+| Interview before scaffolding | A project name does not establish users, scope, or a suitable stack |
+| Plan roughly two-hour usable outcomes | Research and checks support an outcome rather than becoming artificial build days |
+| Reconcile design records, Paper frames, and rendered code | Tokens or mockups alone do not establish that the implementation matches |
+| Use focused verification at reachable failure paths | Avoid duplicate tests and hypothetical internal corruption while preserving security, ownership, money, and persistence checks |
+| Offer build and pair modes | Pair mode explains one step, lets the owner try, then reviews the actual edit |
+| Use a Python standard-library installer | Keep installation portable and avoid package or runtime installation |
+| Install project-local files in one shared directory | Preserve global settings and avoid duplicate skill copies or symlink requirements |
+| Let the owner select frameworks and services | Keep the workflow useful for apps, CLIs, libraries, and services |
+| Configure MCP separately | Access, credentials, permissions, and costs differ by environment |
 
-## Findings from the author's workflow
+The shared directory is `.agents/skills/`, with direct file routing in AGENTS.md.
+[Claude Code's instruction guide](https://code.claude.com/docs/en/memory#agentsmd)
+documents AGENTS.md support from v2.1.277. Its
+[skill guide](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+does not document native discovery from the shared directory. Those sessions read
+the skill files directly instead of using registered slash commands.
 
-### Document ownership reduces repeated decisions
-
-Root instructions became more useful when they held only working rules and links.
-Product intent, current technical decisions, visual values, and daily outcomes
-changed independently. The public starter preserves those owners and adds a
-next action in the roadmap so a fresh session can resume work.
-
-One observed limitation was a stale product summary coexisting with newer decisions
-and roadmap status. buildr-stack allows current product sections to change, rather
-than making only an append-only log writable.
-
-### Design needs evidence and synchronization
-
-The workflow used references, shared controls, an explicit design record, Paper,
-and actual browser inspection. A token file alone did not settle composition or
-prove that code matched the reference. The starter keeps token-to-component mapping,
-truthful media slots, and design/code reconciliation explicit.
-
-Overlapping generic design skills introduced conflicting directions and unnecessary
-steps. The public guidance recommends one selected role at a time and lets the
-project's accepted direction take precedence.
-
-### Planning should produce usable outcomes
-
-The owner replaced task lists of research, testing, and broad hardening with
-roughly two-hour sessions that changed the product. Prerequisites remained visible
-but did not become artificial build days. This became the roadmap template.
-
-### Verification must observe the claimed behavior
-
-The owner objected to duplicate tests, impossible internal states, and research
-assertions retained at runtime. The generalized rule names a reachable cause before
-adding unusual handling. It still protects authentication, ownership, persisted
-money state, external input, and reproduced regressions.
-
-Browser/manual checks and focused automated tests are both available. The system
-does not turn one project's low-test preference into a universal ban on tests.
-
-### Learning is a different execution mode
-
-Earlier tutorial sessions showed a useful pattern: explain the current code path,
-give one edit and a hint, inspect the owner's attempt, then check it. The owner
-could ask the agent to take over an individual step. Pair mode makes that contract
-explicit without reducing the agent's ability to finish authorized build work.
-
-## What the research does and does not prove
+## Evidence on instruction files
 
 [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988) reports that context files
 did not generally improve task success in its tested settings and increased
-inference cost on average. Its authors identify a role for nonstandard practices,
+inference cost on average. Its authors identify a role for nonstandard practices
 while questioning broad repository overviews.
 
 [On the Impact of AGENTS.md Files](https://arxiv.org/abs/2601.20404) reports lower
-median runtime and output-token use across its sample of repositories and pull
-requests, with comparable completion behavior. The studies use different settings
-and measures. Neither establishes an improvement for buildr-stack or every project.
+median runtime and output-token use across its repository and pull-request sample,
+with comparable completion behavior. The studies use different settings and measures.
 
-Our inference is to keep always-loaded instructions short, route conditional
-detail, remove stale or redundant records, and evaluate the actual behavior.
-There is no measured speedup, token saving, correctness guarantee, or star forecast
-for this kit. Local structural checks and live-agent evaluations are separate.
+Our inference is to keep always-loaded instructions short, load conditional detail
+when needed, and check actual agent behavior. Neither study measures buildr-stack;
+local structure and installer checks do not establish model adherence.
 
-## Decisions made for this release
+## Implementation sources
 
-| Decision | Reason | When to reconsider |
-|---|---|---|
-| Plain SKILL.md and Markdown records | Inspectable and easy to adapt; format has documented agent support | A user needs an integration that plain files cannot support |
-| Python standard-library installer | No package installation or remote execution; available across major desktop platforms | Installation friction is observed in real adoption |
-| Project-local installation | Preserves global settings and scopes behavior to the project | Users explicitly request a global installation mode |
-| One shared skill directory with direct file routing | Avoids duplicate copies, host-specific installation choices, and symlink requirements | A host needs native discovery that direct file reads cannot provide |
-| No automatic MCP installation | Accounts, permissions, paths, and costs differ by environment | A narrow opt-in adapter can be tested and justified |
-| No default framework or visual palette | Keeps the starter useful for web apps, libraries, CLIs, and services | A separate stack-specific preset has real users |
-| Build and pair modes | Supports both delivery and understanding the code | Live sessions show unclear mode boundaries |
-| Focused verification | Matches the changed behavior and consequence | Project release requirements need broader gates |
-
-## Name and public presentation
-
-The owner selected `buildr-stack` on 2026-10-14. Earlier naming research found
-existing repositories for candidates including Startloom, Seedframe, Buildseed,
-and Seedwright. No availability claim is made for the selected name. Trademark,
-domain, and package-name clearance were not part of this rename.
-
-The public repository should demonstrate its mechanics: a short quickstart,
-inspectable skills, a design workflow, preservation checks, and
-honest validation status. An attractive README helps explain the system; fabricated
-benchmarks or a broad list of unverified integrations would weaken the evidence.
-
-## Primary implementation sources
-
-- [Agent Skills specification](https://agentskills.io/specification), folder layout,
-  naming, frontmatter, and progressive disclosure.
+- [Agent Skills specification](https://agentskills.io/specification): layout, naming,
+  frontmatter, and progressive disclosure.
 - [Codex skills](https://learn.chatgpt.com/docs/build-skills) and
-  [AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md), local
-  discovery and scoped instructions.
-- [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli), HTTP configuration
-  and environment-sourced headers.
+  [AGENTS.md](https://learn.chatgpt.com/docs/agent-configuration/agents-md):
+  local discovery and scoped instructions.
+- [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli):
+  configuration scope and environment-sourced tokens.
 - [Claude Code skills](https://code.claude.com/docs/en/skills) and
-  [memory](https://code.claude.com/docs/en/memory), native discovery locations and shared project instructions.
-- [Context7](https://github.com/upstash/context7), current documentation retrieval
-  and remote MCP configuration.
-- [Paper MCP](https://paper.design/docs/mcp) and [tokens](https://paper.design/docs/tokens),
-  the current desktop/CLI connection flow and design values.
-- [GitHub Actions Python guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python),
-  focused cross-platform checks. Action references also checked in their primary
-  repositories before writing the workflow.
+  [project instructions](https://code.claude.com/docs/en/memory): loading behavior.
+- [Context7](https://github.com/upstash/context7): documentation retrieval and MCP setup.
+- [Paper MCP](https://paper.design/docs/mcp) and [tokens](https://paper.design/docs/tokens):
+  connection setup and reusable design values.
+- [GitHub Actions Python guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python):
+  cross-platform checks.
 
-No third-party workflow code or skill files are vendored. Comparative descriptions
-and source links acknowledge the reviewed systems; the bundled skills and templates
-were written for this project.
+The task skills and templates were written for this project. `buildr-unslop` was
+copied from the owner's system skill with its name and invocation setting adapted.
+The compared projects are referenced, not bundled.

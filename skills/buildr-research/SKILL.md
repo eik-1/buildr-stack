@@ -30,4 +30,4 @@ date, alternatives, choice, reasons, and what could reverse the choice.
 Put only an accepted current decision and its reason in PROJECT.md.
 
 Finish with a recommendation tied to the constraints and the next concrete
-action. Never promise stars, demand, correctness, or productivity from analogy.
+action.

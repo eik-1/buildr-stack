@@ -265,9 +265,20 @@ def main() -> int:
                 f"{'Planned' if args.dry_run else 'Installed'} {created} files; {unchanged} identical files preserved."
             )
             if not args.dry_run:
+                if args.skills_only:
+                    print("Skills copied. Existing project documents are unchanged.")
+                else:
+                    print(
+                        "Templates copied. Project documents still need project facts."
+                    )
+                print("The installer does not inspect your work or run an AI agent.")
+                print(f"\nNext: open {target} in your coding agent and manually invoke buildr-start.")
+                print("In Codex: $buildr-start")
+                print("If the skill is not in your agent's catalog, send:\n")
                 print(
-                    "Next: open the project in your agent and use buildr-start with your idea."
+                    "Use buildr-start. Read .agents/skills/buildr-start/SKILL.md and follow it."
                 )
+                print("\nThe skill asks about your project first. After your answers, it creates the needed structure and fills the project documents.")
         else:
             errors = check(target)
             if errors:

@@ -5,7 +5,8 @@ Each session must deliver one usable product or operational outcome.
 
 ## Current baseline
 
-Starter documents installed. No product behavior is complete yet.
+[OPEN: what already exists, what has been verified, and what remains. Installing
+the starter files does not establish the project's implementation status.]
 
 ## Prerequisites
 
