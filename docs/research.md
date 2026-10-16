@@ -4,12 +4,14 @@ Checked on 2026-10-13. This is a decision record for the initial implementation,
 not a ranking of every AI development tool. Repository descriptions, dependency
 requirements, and discovery behavior can change after this date.
 
-Updated on 2026-10-16 for Claude Code instruction loading. Its
-[current documentation](https://code.claude.com/docs/en/memory#agentsmd) confirms
-direct AGENTS.md support from v2.1.277. The starter now keeps one AGENTS.md and
-does not generate a CLAUDE.md wrapper. Existing project or ancestor CLAUDE.md files
-can take precedence under default settings; the README covers that setting and
-unsupported sessions.
+Updated on 2026-10-16 for shared installation. Claude Code's
+[instruction guide](https://code.claude.com/docs/en/memory#agentsmd) confirms
+direct AGENTS.md support from v2.1.277. Its
+[skill guide](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+does not document native discovery from `.agents/skills/`. The starter uses that
+single shared directory, with explicit file routing in AGENTS.md. Agents without
+native discovery read the skill files directly through plain-language requests.
+The installer no longer needs an agent-selection flag or duplicate skill trees.
 
 ## Question
 
@@ -133,7 +135,7 @@ for this kit. Local structural checks and live-agent evaluations are separate.
 | Plain SKILL.md and Markdown records | Inspectable and easy to adapt; format has documented agent support | A user needs an integration that plain files cannot support |
 | Python standard-library installer | No package installation or remote execution; available across major desktop platforms | Installation friction is observed in real adoption |
 | Project-local installation | Preserves global settings and scopes behavior to the project | Users explicitly request a global installation mode |
-| Copies for both-agent installation | Avoids symlink requirements and Git checkout differences on Windows | Copy drift becomes a demonstrated maintenance problem |
+| One shared skill directory with direct file routing | Avoids duplicate copies, host-specific installation choices, and symlink requirements | A host needs native discovery that direct file reads cannot provide |
 | No automatic MCP installation | Accounts, permissions, paths, and costs differ by environment | A narrow opt-in adapter can be tested and justified |
 | No default framework or visual palette | Keeps the starter useful for web apps, libraries, CLIs, and services | A separate stack-specific preset has real users |
 | Build and pair modes | Supports both delivery and understanding the code | Live sessions show unclear mode boundaries |
@@ -161,7 +163,7 @@ benchmarks or a broad list of unverified integrations would weaken the evidence.
 - [Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli), HTTP configuration
   and environment-sourced headers.
 - [Claude Code skills](https://code.claude.com/docs/en/skills) and
-  [memory](https://code.claude.com/docs/en/memory), project skills and shared imports.
+  [memory](https://code.claude.com/docs/en/memory), native discovery locations and shared project instructions.
 - [Context7](https://github.com/upstash/context7), current documentation retrieval
   and remote MCP configuration.
 - [Paper MCP](https://paper.design/docs/mcp) and [tokens](https://paper.design/docs/tokens),

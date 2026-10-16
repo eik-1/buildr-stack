@@ -24,7 +24,7 @@ class PreservationTests(unittest.TestCase):
         target.mkdir()
         (target / "PROJECT.md").write_bytes(b"owner's work")
         with self.assertRaises(KitError):
-            self.run_install(target, installation_files("Example", "both", "build", False))
+            self.run_install(target, installation_files("Example", "build", False))
         self.assertEqual((target / "PROJECT.md").read_bytes(), b"owner's work")
         self.assertEqual(list(target.iterdir()), [target / "PROJECT.md"])
 
@@ -38,18 +38,18 @@ class PreservationTests(unittest.TestCase):
         except OSError:
             self.skipTest("OS has not granted symlink creation permission")
         with self.assertRaises(KitError):
-            self.run_install(target, installation_files("Example", "codex", "build", False))
+            self.run_install(target, installation_files("Example", "build", False))
         self.assertEqual(list(outside.iterdir()), [])
         self.assertEqual(len(list(target.iterdir())), 1)
 
     def test_dry_run_does_not_create_target(self):
         target = self.root / "new"
-        self.run_install(target, installation_files("Example", "codex", "build", False), dry_run=True)
+        self.run_install(target, installation_files("Example", "build", False), dry_run=True)
         self.assertFalse(target.exists())
 
     def test_repeat_install_preserves_file_modification_times(self):
         target = self.root / "path with spaces"
-        files = installation_files("Small project", "both", "pair", False)
+        files = installation_files("Small project", "pair", False)
         self.run_install(target, files)
         times = {name: (target / name).stat().st_mtime_ns for name in files}
         self.assertEqual(self.run_install(target, files), (0, len(files)))
@@ -60,10 +60,10 @@ class PreservationTests(unittest.TestCase):
         target = self.root / "existing"
         target.mkdir()
         (target / "AGENTS.md").write_bytes(b"existing project rules")
-        self.run_install(target, installation_files("Example", "claude", "build", True))
+        self.run_install(target, installation_files("Example", "build", True))
         self.assertEqual((target / "AGENTS.md").read_bytes(), b"existing project rules")
         self.assertFalse((target / "PROJECT.md").exists())
-        self.assertTrue((target / ".claude/skills/buildr-start/SKILL.md").is_file())
+        self.assertTrue((target / ".agents/skills/buildr-start/SKILL.md").is_file())
         self.assertEqual(check(target), [])
 
 

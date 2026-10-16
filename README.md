@@ -11,14 +11,15 @@ your own framework, model, editor, and deployment tools.
 Clone or download this repository. From its directory, run with Python 3.10+:
 
 ```bash
-python3 buildr_stack.py init ../my-project --name "My project" --agent codex
+python3 buildr_stack.py init ../my-project --name "My project"
 ```
 
 The command creates `my-project` beside the toolkit. Open that new directory in
 your coding agent and describe your idea:
 
 ```text
-Use buildr-start. I want a booking tool for a local sports club.
+Read .agents/skills/buildr-start/SKILL.md and follow it.
+I want a booking tool for a local sports club.
 Help me define the first useful version and leave unknown decisions explicit.
 ```
 
@@ -44,32 +45,24 @@ and `buildr-sync` to update the project documents after meaningful work. Use
 `buildr-research` when a decision needs external evidence. These are available
 when needed; a small change does not need every skill.
 
-## Agent choices
+## Shared agent setup
 
-- `--agent codex` copies skills into `.agents/skills/`.
-- `--agent claude` copies skills into `.claude/skills/`.
-- `--agent both` creates both sets of skill files.
-- `--agent manual` puts them in a plain `skills/` directory. Ask your agent to read
-  AGENTS.md and the selected skill file directly.
+Every full install creates one `AGENTS.md` and one `.agents/skills/` directory.
+There is no agent-selection flag or duplicate skill installation. AGENTS.md maps
+each task to its skill file, so an agent can read the instructions directly.
 
-All full installs use one `AGENTS.md` for project instructions. Claude Code
-v2.1.277+ can read it directly, so the installer does not create `CLAUDE.md`.
-With Claude's default settings, a project or ancestor `CLAUDE.md` or
-`CLAUDE.local.md` takes precedence. If one exists, use `/config` to set
-**Project instructions** to `claude-md-and-agents-md`. For an older or unsupported
-session, update Claude Code or add a `CLAUDE.md` containing `@AGENTS.md` yourself.
-See [Claude Code's AGENTS.md documentation](https://code.claude.com/docs/en/memory#agentsmd)
-for loading rules and availability.
+Codex discovers this directory and supports `$buildr-start`. In hosts without
+native discovery of the shared directory, including Claude Code, use the
+plain-language prompt above. Reading a skill file does not register a slash command.
+See the official [Codex](https://learn.chatgpt.com/docs/build-skills) and
+[Claude Code](https://code.claude.com/docs/en/skills#choose-where-skills-load)
+guides for native discovery behavior.
 
-Codex uses `$buildr-start`; Claude Code uses `/buildr-start`. Plain language also
-works when the agent discovers the skill. On Windows, use `py -3` if that is your
-Python command.
-
-If a skill is missing, confirm you opened the generated project rather than the
-toolkit, check the path above, and start or refresh the agent session. As a fallback,
-ask it to read the exact SKILL.md file. See the official
-[Codex skill docs](https://learn.chatgpt.com/docs/build-skills) and
-[Claude Code skill docs](https://code.claude.com/docs/en/skills) for discovery details.
+Claude Code v2.1.277+ supports AGENTS.md directly. Check **Project instructions**
+in `/config` if those rules are not loading, and consult its
+[instruction-loading guide](https://code.claude.com/docs/en/memory#agentsmd).
+For another agent, ask it to read AGENTS.md and the relevant SKILL.md file.
+On Windows, use `py -3` if that is your Python command.
 
 ## The four project documents
 
@@ -99,21 +92,19 @@ The working rules carry over the owner's preferences: maintainable code, small
 usable outcomes, checks at real boundaries, browser/manual verification, and no
 redundant tests or hypothetical recovery code. The chosen framework remains yours.
 
-`buildr-unslop` is copied from the author's system skill. The starter requires it
-for every response and written change. Its name is changed and the source's
-automatic-invocation blocker is removed; the writing rules are otherwise preserved.
-Automatic skill selection is enabled by default in
-[Codex](https://learn.chatgpt.com/docs/build-skills) and
-[Claude Code](https://code.claude.com/docs/en/skills). The agent instructions make
-its use required; there is no background process enforcing model behavior.
+`buildr-unslop` is copied from the author's system skill. AGENTS.md requires it
+for every response and written change, with a direct file path for agents that
+do not discover it. Its name is changed and the source's automatic-invocation
+blocker is removed; the writing rules are otherwise preserved. These instructions
+guide the agent; no background process enforces model behavior.
 
 ## Use an existing project
 
 Preview the installation, then add only the skills:
 
 ```bash
-python3 buildr_stack.py init ../existing-project --agent both --skills-only --dry-run
-python3 buildr_stack.py init ../existing-project --agent both --skills-only
+python3 buildr_stack.py init ../existing-project --skills-only --dry-run
+python3 buildr_stack.py init ../existing-project --skills-only
 ```
 
 This adds skills, license notices, and installation metadata. It leaves existing
@@ -121,7 +112,9 @@ project documents intact. Ask `buildr-start` to reuse your current records and
 preserve established rules. If your documents have different filenames, add their
 roles and links to the instruction file your agent already reads.
 Add `Always use buildr-unslop for every response and written change` to those
-existing rules. A skills-only install deliberately leaves them untouched.
+existing rules. Also tell the agent to read relevant instructions from
+`.agents/skills/<skill-name>/SKILL.md` when they are absent from its catalog.
+A skills-only install deliberately leaves existing rules untouched.
 
 An identical repeat install skips existing files. Different existing files cause
 the installer to stop before writing. Merge changes manually; there is no overwrite
@@ -131,12 +124,12 @@ installation, review the error and rerun to preserve the identical files already
 ## What happens under the hood?
 
 `buildr_stack.py` reads `templates/`, replaces the project-name and mode placeholders,
-and prepares copies of the skills for the selected agent. It checks every planned
+and copies the skills into `.agents/skills/`. It checks every planned
 path for conflicts and symlinks before writing, then creates files without replacing
 existing ones. A dry run reports that plan and writes nothing.
 
-The generated `.buildr-stack.json` records the kit version, project name, agent,
-mode, and whether the install was skills-only. The checker reads it to determine
+The generated `.buildr-stack.json` records the kit version, project name, mode,
+and whether the install was skills-only. The checker reads it to determine
 which files to expect. It does not track coding sessions. Each installed skill
 includes its license notice, and BUILDR_STACK_LICENSE.txt covers the copied kit files.
 Your project's own license remains your choice.

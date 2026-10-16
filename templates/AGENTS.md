@@ -4,7 +4,7 @@
 
 - Always invoke `buildr-unslop` at the start of a session and apply it to every
   response, document, UI string, and skill you write or edit. If it is missing from
-  the catalog, read its SKILL.md in this project's installed skills directory.
+  the catalog, read `.agents/skills/buildr-unslop/SKILL.md` directly.
 - Follow the current request. Build the smallest usable change and preserve unrelated work.
 - When starting or adopting a project, use `buildr-start` to establish the intended
   user, problem, and first useful result. A name alone is not a brief. Reuse known
@@ -68,8 +68,24 @@ In build mode, complete authorized implementation and verification.
 In pair mode, explain the flow, give one task and a hint, then let the user try.
 Take over only the part they ask you to implement.
 
-buildr-stack skills use the `buildr-` prefix. Invoke the relevant skill by name or ask in
-plain language. Do not load every skill or run every stage for a small change.
+## Skills
+
+Read `.agents/skills/<skill-name>/SKILL.md` before using a skill. If your agent
+discovers it natively, invoke it by name. Otherwise open that file directly and
+follow its instructions. Plain-language requests use the same files.
+
+| Skill | Use when |
+|---|---|
+| `buildr-unslop` | Every response and piece of writing |
+| `buildr-start` | Defining a new project or adopting this workflow |
+| `buildr-research` | A selected decision needs external evidence |
+| `buildr-design` | Choosing or changing UI and visual rules |
+| `buildr-plan` | Selecting the next usable outcome and its check |
+| `buildr-pair` | The owner wants to learn by trying a step |
+| `buildr-review` | Reviewing a changed path |
+| `buildr-sync` | Updating project records after meaningful work |
+
+Load only the skills the task needs. A small change does not need every stage.
 
 ## Commit messages
 

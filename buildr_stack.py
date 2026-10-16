@@ -10,15 +10,10 @@ import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 ROOT = Path(__file__).resolve().parent
 MARKER = ".buildr-stack.json"
-AGENT_ROOTS = {
-    "codex": (".agents/skills",),
-    "claude": (".claude/skills",),
-    "both": (".agents/skills", ".claude/skills"),
-    "manual": ("skills",),
-}
+SKILL_ROOT = ".agents/skills"
 TOKENS = {"project_name", "session_mode"}
 
 
@@ -30,9 +25,7 @@ def project_path(value: str) -> Path:
     return Path(value).expanduser().absolute()
 
 
-def installation_files(
-    name: str, agent: str, mode: str, skills_only: bool
-) -> dict[str, bytes]:
+def installation_files(name: str, mode: str, skills_only: bool) -> dict[str, bytes]:
     if not name.strip() or len(name) > 100 or any(ord(c) < 32 for c in name):
         raise KitError(
             "Project name must be a nonempty single line of at most 100 characters."
@@ -49,18 +42,16 @@ def installation_files(
                 )
     notice = (ROOT / "LICENSE").read_bytes()
     files["BUILDR_STACK_LICENSE.txt"] = notice
-    for skill_root in AGENT_ROOTS[agent]:
-        for source in sorted((ROOT / "skills").rglob("*")):
-            if source.is_file():
-                relative = source.relative_to(ROOT / "skills").as_posix()
-                files[f"{skill_root}/{relative}"] = source.read_bytes()
-        for skill in sorted((ROOT / "skills").iterdir()):
-            if skill.is_dir():
-                files[f"{skill_root}/{skill.name}/LICENSE.txt"] = notice
+    for source in sorted((ROOT / "skills").rglob("*")):
+        if source.is_file():
+            relative = source.relative_to(ROOT / "skills").as_posix()
+            files[f"{SKILL_ROOT}/{relative}"] = source.read_bytes()
+    for skill in sorted((ROOT / "skills").iterdir()):
+        if skill.is_dir():
+            files[f"{SKILL_ROOT}/{skill.name}/LICENSE.txt"] = notice
     metadata = {
         "version": VERSION,
         "name": name,
-        "agent": agent,
         "mode": mode,
         "skills_only": skills_only,
     }
@@ -175,8 +166,8 @@ def check(target: Path) -> list[str]:
     if (target / MARKER).exists():
         guard_path(target, MARKER)
         metadata = json.loads((target / MARKER).read_text(encoding="utf-8"))
-        if not isinstance(metadata, dict) or metadata.get("agent") not in AGENT_ROOTS:
-            raise KitError("Invalid installation metadata: expected a known agent.")
+        if not isinstance(metadata, dict):
+            raise KitError("Invalid installation metadata: expected an object.")
         if not isinstance(metadata.get("skills_only"), bool):
             raise KitError(
                 "Invalid installation metadata: skills_only must be boolean."
@@ -185,25 +176,23 @@ def check(target: Path) -> list[str]:
             raise KitError(
                 f"Installation version differs from checker {VERSION}; use the matching toolkit checkout."
             )
-        roots = AGENT_ROOTS[metadata["agent"]]
         skills = []
         docs = []
         expected = [
             source.relative_to(ROOT / "skills")
             for source in sorted((ROOT / "skills").rglob("SKILL.md"))
         ]
-        for root in roots:
-            for relative in expected:
-                path = guard_path(target, f"{root}/{relative.as_posix()}")
-                if path.is_file():
-                    skills.append(path)
-                else:
-                    errors.append(f"Missing skill: {path}")
-                notice = guard_path(
-                    target, f"{root}/{relative.parent.as_posix()}/LICENSE.txt"
-                )
-                if not notice.is_file():
-                    errors.append(f"Missing skill license notice: {notice}")
+        for relative in expected:
+            path = guard_path(target, f"{SKILL_ROOT}/{relative.as_posix()}")
+            if path.is_file():
+                skills.append(path)
+            else:
+                errors.append(f"Missing skill: {path}")
+            notice = guard_path(
+                target, f"{SKILL_ROOT}/{relative.parent.as_posix()}/LICENSE.txt"
+            )
+            if not notice.is_file():
+                errors.append(f"Missing skill license notice: {notice}")
         if not guard_path(target, "BUILDR_STACK_LICENSE.txt").is_file():
             errors.append("Missing BUILDR_STACK_LICENSE.txt attribution notice.")
         if not metadata["skills_only"]:
@@ -215,15 +204,6 @@ def check(target: Path) -> list[str]:
                     docs.append(path)
                 else:
                     errors.append(f"Missing document: {path}")
-        if len(roots) == 2:
-            for relative in expected:
-                left, right = (target / root / relative for root in roots)
-                if (
-                    left.is_file()
-                    and right.is_file()
-                    and left.read_bytes() != right.read_bytes()
-                ):
-                    errors.append(f"Skill copies differ: {relative.parent.name}")
     elif target == ROOT:
         skills = sorted((ROOT / "skills").rglob("SKILL.md"))
         docs = sorted(path for path in ROOT.rglob("*.md") if ".git" not in path.parts)
@@ -259,7 +239,6 @@ def main() -> int:
     init.add_argument(
         "--name", help="Project name; defaults to the destination folder name"
     )
-    init.add_argument("--agent", choices=AGENT_ROOTS, default="codex")
     init.add_argument("--mode", choices=("build", "pair"), default="build")
     init.add_argument(
         "--skills-only",
@@ -279,7 +258,7 @@ def main() -> int:
         target = project_path(args.directory)
         if args.command == "init":
             files = installation_files(
-                args.name or target.name, args.agent, args.mode, args.skills_only
+                args.name or target.name, args.mode, args.skills_only
             )
             created, unchanged = install(target, files, args.dry_run)
             print(

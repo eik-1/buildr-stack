@@ -7,6 +7,8 @@ instructions; `templates/` holds the four starter documents.
   a session. Apply it to every response and every piece of prose you write or edit.
 - Inspect git status before editing. Preserve unrelated work.
 - Keep the installer in the Python standard library and compatible with Python 3.10+.
+- Install skills once in `.agents/skills/`. Keep direct file routing in the
+  generated AGENTS.md for hosts without native discovery of that directory.
 - Never overwrite a different existing file or write through a managed symlink.
 - Do not install tools, edit global settings, contact services, or initialize a
   user's Git repository from the installer.
