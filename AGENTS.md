@@ -6,7 +6,7 @@ instructions; `templates/` holds the four starter documents.
 - Always read and apply [buildr-unslop](skills/buildr-unslop/SKILL.md) when starting
   a session. Apply it to every response and every piece of prose you write or edit.
 - Inspect git status before editing. Preserve unrelated work.
-- Keep the installer in the Python standard library and compatible with Python 3.10+.
+- Keep the installer dependency-free, using Node.js built-in modules and Node.js 22+.
 - Install skills once in `.agents/skills/`. Keep direct file routing in the
   generated AGENTS.md for hosts without native discovery of that directory.
 - Never overwrite a different existing file or write through a managed symlink.

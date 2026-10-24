@@ -1,0 +1,36 @@
+{
+  "name": "buildr-stack",
+  "version": "0.2.0",
+  "description": "Project documents and agent skills for building with AI.",
+  "type": "module",
+  "bin": {
+    "buildr-stack": "bin/buildr-stack.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "skills/",
+    "docs/",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "assets/banner.jpg"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "node bin/buildr-stack.js check .",
+    "test": "node --test",
+    "prepublishOnly": "npm run check && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eik-1/buildr-stack.git"
+  },
+  "bugs": "https://github.com/eik-1/buildr-stack/issues",
+  "homepage": "https://github.com/eik-1/buildr-stack#readme",
+  "license": "MIT",
+  "keywords": ["cli", "agent-skills", "project-starter", "ai"]
+}

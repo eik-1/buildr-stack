@@ -1,7 +1,8 @@
 # Research behind buildr-stack
 
 Initial research: 2026-10-13. Shared instruction and skill discovery updated:
-2026-10-16. Tool behavior and repository details below reflect those checks.
+2026-10-16. Installer distribution updated: 2026-10-24. Tool behavior and
+repository details below reflect those checks.
 
 The starting point was the owner's Refrakt workflow: separate product, design,
 roadmap, and agent instructions, with roughly two-hour outcomes and an option to
@@ -33,7 +34,7 @@ Several unrelated projects use the name pstack, so they are listed separately.
 | Reconcile design records, Paper frames, and rendered code | Tokens or mockups alone do not establish that the implementation matches |
 | Use focused verification at reachable failure paths | Avoid duplicate tests and hypothetical internal corruption while preserving security, ownership, money, and persistence checks |
 | Offer build and pair modes | Pair mode explains one step, lets the owner try, then reviews the actual edit |
-| Use a Python standard-library installer | Keep installation portable and avoid package or runtime installation |
+| Distribute a Node.js installer through npm | Let users run `npx buildr-stack@latest init my-project` without a checkout or Python; keep the installer dependency-free |
 | Install project-local files in one shared directory | Preserve global settings and avoid duplicate skill copies or symlink requirements |
 | Let the owner select frameworks and services | Keep the workflow useful for apps, CLIs, libraries, and services |
 | Configure MCP separately | Access, credentials, permissions, and costs differ by environment |
@@ -74,8 +75,12 @@ local structure and installer checks do not establish model adherence.
 - [Context7](https://github.com/upstash/context7): documentation retrieval and MCP setup.
 - [Paper MCP](https://paper.design/docs/mcp) and [tokens](https://paper.design/docs/tokens):
   connection setup and reusable design values.
-- [GitHub Actions Python guide](https://docs.github.com/en/actions/tutorials/build-and-test-code/python):
-  cross-platform checks.
+- [npm package metadata](https://docs.npmjs.com/cli/configuring-npm/package-json)
+  and [npm exec](https://docs.npmjs.com/cli/commands/npm-exec): executable commands,
+  bundled files, and running a downloaded package.
+- [Node.js argument parsing](https://nodejs.org/api/util.html#utilparseargsconfig)
+  and [test runner](https://nodejs.org/api/test.html): CLI parsing and tests using
+  built-in modules.
 
 The task skills and templates were written for this project. `buildr-unslop` was
 copied from the owner's system skill with its name and invocation setting adapted.
